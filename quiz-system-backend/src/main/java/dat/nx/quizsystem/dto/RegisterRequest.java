@@ -1,4 +1,4 @@
-package dat.nx.quizsystem.DTO;
+package dat.nx.quizsystem.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
