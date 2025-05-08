@@ -5,7 +5,6 @@ import lombok.*;
 
 @Entity
 @Table(name = "User")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -28,5 +27,33 @@ public class User {
 
     public enum Role {
         ADMIN, USER
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }
