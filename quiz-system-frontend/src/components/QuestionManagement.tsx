@@ -61,7 +61,7 @@ const QuestionManagement: React.FC<QuestionManagementProps> = ({ onUpdate }) => 
             if(isEditing && editId !== null) {
                 await axios.put(`http://localhost:8080/api/questions/${editId}`, formData)
             } else {
-                await axios.post(`http://localhost:8080/api/questions/${editId}`, formData)
+                await axios.post(`http://localhost:8080/api/questions`, formData)
             }
             setFormData({ content:'', options:'[]', correctAnswer: '', topic: ''})
             setOptionInputs(['','','',''])
