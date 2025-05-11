@@ -15,7 +15,7 @@ public class Question {
     @Column(columnDefinition = "TEXT")
     private String options;
 
-    @Column(nullable = false)
+    @Column(name = "correct_answer", nullable = false)
     private String correctAnswer;
 
     @Column(nullable = false)
