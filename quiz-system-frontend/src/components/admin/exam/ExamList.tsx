@@ -1,4 +1,3 @@
-// /components/ExamList.tsx
 import React, { useEffect, useState } from 'react';
 import { getAllExams, deleteExam } from '../../../services/ExamService';  // Các service xử lý bài thi
 import { Exam } from '../../../types/Exam';

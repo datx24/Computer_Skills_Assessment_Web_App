@@ -1,10 +1,9 @@
-// src/components/Navbar.tsx
 import React from 'react';
 import { Button, Space, Typography } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-// Navbar.tsx
+
 interface NavbarProps {
   className?: string;  // <-- thêm dấu hỏi để className không bắt buộc
 }

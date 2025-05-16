@@ -1,4 +1,3 @@
-// src/components/Sidebar.tsx
 import React from 'react';
 import { Typography, Collapse } from 'antd';
 import { FileAddOutlined, UnorderedListOutlined } from '@ant-design/icons';
