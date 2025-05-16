@@ -1,71 +1,119 @@
-import React from 'react';
-import { useAuth } from "../context/AuthContext";
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Divider, Space, Typography } from 'antd';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer'; 
+import Header from '../components/fragments/Header';
+import Footer from '../components/fragments/Footer';
+import axios from 'axios';
 
-// Component Home sử dụng TypeScript
+interface Exam {
+  id: number;
+  title: string;
+  duration: number;
+  topic: string;
+  createdAt: string;
+}
+
 const Home: React.FC = () => {
-  const { logout } = useAuth(); // Lấy hàm logout từ context xác thực
-  const navigate = useNavigate(); // Hook để điều hướng giữa các trang
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const [exams, setExams] = useState<Exam[]>([]);
 
-  // Hàm xử lý khi người dùng nhấn nút đăng xuất
+  useEffect(() => {
+    const fetchExams = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/exams', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        setExams(response.data);
+      } catch (error) {
+        console.error('Lỗi khi lấy danh sách bài thi:', error);
+      }
+    };
+
+    fetchExams();
+  }, []);
+
   const handleLogout = () => {
-    logout(); // Thực hiện đăng xuất
-    navigate('/login'); // Điều hướng về trang đăng nhập
+    logout();
+    navigate('/login');
   };
 
-  // Danh sách các chủ đề thi dựa trên yêu cầu dự án
-  const topics = [
-    'Microsoft Word',
-    'Microsoft Excel',
-    'Microsoft PowerPoint',
-    'Internet and Email',
-    'Windows OS',
-    'Basic Computer Security',
-  ];
-
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      {/* Sử dụng component Header */}
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-indigo-100">
       <Header />
 
-      {/* Phần nội dung chính, chiếm phần còn lại của màn hình */}
-      <main className="flex-grow container mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-xl p-8 text-center transform hover:scale-105 transition duration-300">
-          <h2 className="text-4xl font-bold mb-6 text-indigo-700">Trang chủ</h2>
-          <p className="text-xl mb-6 text-gray-600">Chào mừng bạn đã đăng nhập!</p>
+      <main className="flex-grow container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <Card
+          className="shadow-2xl rounded-2xl overflow-hidden border-none bg-white/95 backdrop-blur-md transform hover:shadow-3xl transition-shadow duration-300"
+          bodyStyle={{ padding: '40px' }}
+        >
+          <Typography.Title level={1} className="text-center text-indigo-800 font-extrabold mb-6">
+            Trang chủ
+          </Typography.Title>
+          <Typography.Text className="block text-center text-xl text-gray-600 font-medium mb-10">
+            Chào mừng bạn đến với hành trình học tập thú vị!
+          </Typography.Text>
 
-          {/* Phần hướng dẫn sử dụng */}
-          <section className="mb-8">
-            <h3 className="text-2xl font-semibold mb-4 text-teal-600">Hướng dẫn sử dụng</h3>
-            <p className="text-gray-700 leading-relaxed">
-              - Chọn một chủ đề bên dưới để bắt đầu bài thi.<br />
-              - Mỗi bài thi có thời gian giới hạn và tự động chấm điểm.<br />
-              - Kiểm tra lịch sử điểm số trong mục "Lịch sử".<br />
-              - (Admin) Quản lý câu hỏi tại trang quản lý.
-            </p>
+          <section className="mb-12">
+            <Typography.Title level={3} className="text-center text-teal-600 font-semibold mb-6">
+              Hướng dẫn sử dụng
+            </Typography.Title>
+            <div className="flex justify-center">
+              <Space direction="vertical" size="large" className="text-left">
+                <Typography.Text className="text-gray-700 leading-relaxed text-lg">
+                  - Chọn một bài thi bên dưới để bắt đầu khám phá kiến thức.
+                </Typography.Text>
+                <Typography.Text className="text-gray-700 leading-relaxed text-lg">
+                  - Mỗi bài thi có thời gian giới hạn và tự động chấm điểm chính xác.
+                </Typography.Text>
+                <Typography.Text className="text-gray-700 leading-relaxed text-lg">
+                  - Kiểm tra lịch sử điểm số trong mục "Lịch sử" để theo dõi tiến độ.
+                </Typography.Text>
+                <Typography.Text className="text-gray-700 leading-relaxed text-lg">
+                  - (Admin) Quản lý câu hỏi tại trang quản lý để tối ưu hóa nội dung.
+                </Typography.Text>
+              </Space>
+            </div>
           </section>
 
-          {/* Phần chọn chủ đề thi */}
-          <section className="mt-8">
-            <h3 className="text-2xl font-semibold mb-6 text-teal-600">Chọn chủ đề thi</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {topics.map((topic, index) => (
-                <button
-                  key={index}
-                  onClick={() => navigate(`/exams/start?topic=${topic.toLowerCase().replace(/ /g, '-')}`)}
-                  className="bg-gradient-to-r from-red-400 to-orange-500 text-white p-6 rounded-lg hover:from-red-500 hover:to-orange-600 transform hover:scale-105 transition duration-300 shadow-md"
+          <Divider className="my-10 border-gray-200" />
+
+          <section>
+            <Typography.Title level={3} className="text-center text-teal-600 font-semibold mb-8">
+              Khám phá các bài thi
+            </Typography.Title>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {exams.map((exam) => (
+                <Card
+                  key={exam.id}
+                  hoverable
+                  className="bg-gradient-to-br from-blue-100 to-indigo-200 rounded-xl shadow-lg transform hover:-translate-y-2 transition-all duration-300"
+                  onClick={() => navigate(`/exam/detail/${exam.id}`)}
                 >
-                  {topic}
-                </button>
+                  <Card.Meta
+                    title={<Typography.Text className="text-xl font-bold text-indigo-800">{exam.title}</Typography.Text>}
+                    description={
+                      <Space direction="vertical" size="small">
+                        <Typography.Text className="text-gray-600">Thời gian: {exam.duration} phút</Typography.Text>
+                        <Typography.Text className="text-gray-600">Chủ đề: {exam.topic}</Typography.Text>
+                        <Typography.Text className="text-gray-600">
+                          Ngày tạo: {new Date(exam.createdAt).toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          })}
+                        </Typography.Text>
+                      </Space>
+                    }
+                  />
+                </Card>
               ))}
             </div>
           </section>
-        </div>
+        </Card>
       </main>
 
-      {/* Sử dụng component Footer */}
       <Footer />
     </div>
   );
