@@ -1,6 +1,9 @@
 package dat.nx.quizsystem.services.impl;
 
+import dat.nx.quizsystem.dto.QuestionDTO;
+import dat.nx.quizsystem.models.Exam;
 import dat.nx.quizsystem.models.Question;
+import dat.nx.quizsystem.repositories.ExamRepository;
 import dat.nx.quizsystem.repositories.QuestionRepository;
 import dat.nx.quizsystem.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,50 +18,49 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private QuestionRepository questionRepository;
 
-    //Tạo mới câu hỏi
+    @Autowired
+    private ExamRepository examRepository;
+
     @Override
-    public Question createQuestion(Question question) {
+    public Question createQuestion(QuestionDTO dto) {
+        Exam exam = examRepository.findById(dto.getExamId())
+                .orElseThrow(() -> new RuntimeException("Exam not found"));
+
+        Question question = new Question();
+        question.setContent(dto.getContent());
+        question.setOptions(dto.getOptions());
+        question.setExam(exam);
+
         return questionRepository.save(question);
     }
 
-    //Lấy danh sách tất cả câu hỏi
+
     @Override
     public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+        return questionRepository.findAll();  // Lấy tất cả câu hỏi
     }
 
-    //Lấy danh sách các câu hỏi theo chủ đề
-    @Override
-    public List<Question> getQuestionsByTopic(String topic) {
-        return questionRepository.findByTopic(topic);
-    }
-
-    //Lấy thông tin 1 câu hỏi theo id
     @Override
     public Optional<Question> getQuestionById(Long id) {
-        return questionRepository.findById(id);
+        return questionRepository.findById(id);  // Lấy câu hỏi theo ID
     }
 
-    //Cập nhật thông tin 1 câu hỏi theo id
     @Override
-    public Question updateQuestion(Long id, Question updatedQuestion) {
-        Optional<Question> existingQuestion = questionRepository.findById(id);
-        //Check xem giá trị có tồn tại hay không
-        if(existingQuestion.isPresent()) {
-            Question question = existingQuestion.get();
-            question.setContent(updatedQuestion.getContent());
-            question.setOptions(updatedQuestion.getOptions());
-            question.setTopic(updatedQuestion.getTopic());
-            question.setTopic(updatedQuestion.getTopic());
-            return questionRepository.save(question);
-        } else {
-            throw new RuntimeException("Câu hỏi không tồn tại với ID: " + id);
+    public Question updateQuestion(Long id, Question question) {
+        if (questionRepository.existsById(id)) {
+            question.setId(id);
+            return questionRepository.save(question);  // Cập nhật câu hỏi
         }
+        return null;  // Nếu không tồn tại câu hỏi, trả về null
     }
 
-    //Xóa câu hỏi
     @Override
     public void deleteQuestion(Long id) {
-        questionRepository.deleteById(id);
+        questionRepository.deleteById(id);  // Xóa câu hỏi
+    }
+
+    @Override
+    public List<Question> getQuestionsByExamId(Long examId) {
+        return questionRepository.findByExamId(examId);  // Lấy các câu hỏi thuộc bài thi với examId
     }
 }
