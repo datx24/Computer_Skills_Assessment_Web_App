@@ -16,10 +16,11 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role, Long userId) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role)
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -32,6 +33,28 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    public Long extractUserIdFromToken(String token) {
+        try {
+            Object userIdObj = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("userId");
+
+            if (userIdObj instanceof Integer) {
+                return ((Integer) userIdObj).longValue();
+            } else if (userIdObj instanceof Long) {
+                return (Long) userIdObj;
+            } else if (userIdObj instanceof String) {
+                return Long.parseLong((String) userIdObj);
+            } else {
+                throw new RuntimeException("Unexpected userId type in token");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid token or userId missing", e);
+        }
     }
 
     public boolean validateToken(String token) {
