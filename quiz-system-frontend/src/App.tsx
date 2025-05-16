@@ -1,29 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import Login from './components/Login';
 import Register from './components/Register';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Unauthorized from './pages/Unauthorized';
 import ProtectedRoute from './components/ProtectedRoute';
+import ExamPage from './components/user/ExamPage';
+import ExamDetail from './components/user/ExamDetail';
 
 // A wrapper component to handle redirection logic
 const AppContent: React.FC = () => {
-  const { role } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Redirect based on role after login
-    if (role) {
-      if (role === 'ADMIN') {
-        navigate('/admin', { replace: true });
-      } else {
-        navigate('/home', { replace: true });
-      }
-    }
-  }, [role, navigate]);
-
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
@@ -33,6 +21,22 @@ const AppContent: React.FC = () => {
         element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="exam/start"
+        element={
+          <ProtectedRoute>
+            <ExamPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/exam/detail/:id"
+        element={
+          <ProtectedRoute>
+            <ExamDetail />
           </ProtectedRoute>
         }
       />
