@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // Generate JWT token
-        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name(), user.getId());
 
         // Create response
         LoginResponse response = new LoginResponse();
