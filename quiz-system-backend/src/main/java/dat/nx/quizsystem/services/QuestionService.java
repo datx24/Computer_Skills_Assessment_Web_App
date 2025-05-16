@@ -1,5 +1,6 @@
 package dat.nx.quizsystem.services;
 
+import dat.nx.quizsystem.dto.QuestionDTO;
 import dat.nx.quizsystem.models.Question;
 
 import java.util.List;
@@ -7,15 +8,15 @@ import java.util.Optional;
 
 public interface QuestionService {
 
-    Question createQuestion(Question question);
+    Question createQuestion(QuestionDTO dto);  // Tạo câu hỏi mới
 
-    List<Question> getAllQuestions();
+    List<Question> getAllQuestions();  // Lấy tất cả câu hỏi
 
-    List<Question> getQuestionsByTopic(String topic);
+    Optional<Question> getQuestionById(Long id);  // Lấy câu hỏi theo ID
 
-    Optional<Question> getQuestionById(Long id);
+    Question updateQuestion(Long id, Question question);  // Cập nhật câu hỏi
 
-    Question updateQuestion(Long id, Question updatedQuestion);
+    void deleteQuestion(Long id);  // Xóa câu hỏi
 
-    void deleteQuestion(Long id);
+    List<Question> getQuestionsByExamId(Long examId);  // Lấy câu hỏi của một bài thi
 }
