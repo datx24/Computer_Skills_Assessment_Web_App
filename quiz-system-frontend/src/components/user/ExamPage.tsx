@@ -4,6 +4,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import Header from '../fragments/Header';
 import Footer from '../fragments/Footer';
 import { Typography, Radio, Button, Card, message, Pagination, Modal } from 'antd';
+import { decodeToken } from '../../utils/jwtUtils'
 
 const { Title, Paragraph } = Typography;
 
@@ -151,8 +152,14 @@ const ExamPage: React.FC = () => {
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         }
+        
       );
-
+      const token = localStorage.getItem('token');
+      if (!token) {
+        message.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+        navigate('/login');
+        return;
+      }
       if (autoSubmit) {
         message.info(`Hết giờ! Bài đã được nộp tự động. Điểm: ${response.data}/10`);
       } else {

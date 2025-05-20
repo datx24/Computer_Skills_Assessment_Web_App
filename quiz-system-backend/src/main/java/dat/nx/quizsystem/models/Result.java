@@ -11,16 +11,26 @@ public class Result {
     private Long id;
 
     @Column(nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @Column(nullable = false)
-    private Integer examId;
+    private Long examId;
 
     @Column(nullable = false)
     private Integer score;
 
     @Column(nullable = false)
     private LocalDateTime completedAt = LocalDateTime.now();
+
+    // Constructors
+    public Result() {}
+
+    public Result(Long examId, Long userId, Integer score, LocalDateTime submissionTime) {
+        this.examId = examId;
+        this.userId = userId;
+        this.score = score;
+        this.completedAt = completedAt;
+    }
 
     public Long getId() {
         return id;
@@ -30,19 +40,19 @@ public class Result {
         this.id = id;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public Integer getExamId() {
+    public Long getExamId() {
         return examId;
     }
 
-    public void setExamId(Integer examId) {
+    public void setExamId(Long examId) {
         this.examId = examId;
     }
 

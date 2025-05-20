@@ -36,6 +36,7 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         setRole(role)
         localStorage.setItem('user',JSON.stringify(newUser))
         localStorage.setItem('role', role)
+        localStorage.setItem('token', token);
     }
 
     const logout = () => {
